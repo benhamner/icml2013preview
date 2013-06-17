@@ -17,6 +17,10 @@ a {
     text-decoration: none;
 }
 
+a:hover {
+    cursor: pointer;
+}
+
 h1 {
     color: #e65a30; 
     asdf: #C0E3F5;
@@ -50,4 +54,8 @@ h3 {
     background-color: white;
 
     text-align: center;
+}
+
+#topicsList {
+    text-align: left;
 }

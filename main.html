@@ -4,11 +4,23 @@
   inspired by <a href="https://twitter.com/karpathy">@karpathy</a> (with his <a href="">NIPS 2012 Preview</a>)
 </div>
 <div id="wrapper">
+  <div id="topicSorter">
+    Sort by LDA Topics:
+    <span ng-repeat="topic in topics">
+        <a ng-click="sort_topic($index)">Topic {{$index+1}}</a>
+    </span>
+  </div>
+  <div id="topicsList">
+    <div ng-repeat="topic in topics">
+        <p><b>Topic {{$index+1}}:</b> {{topic}}</p>
+    </div>
+  </div>
   <div id="paperList">
     <div ng-repeat="paper in papers">
       <h3>{{paper.title}}</h3>
       <p>{{paper.authors}}</p>
       <a href="{{paper.pdf_url}}"><img src="{{paper.thumbnail_path}}" width="100%"></img></a>
+      <p>{{paper.most_common_string}}</p>
     </div>
   </div>
 </div>

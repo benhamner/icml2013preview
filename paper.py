@@ -40,22 +40,30 @@ def tokenize(text):
     counter = Counter(tokens)
     tokens = [x for x in tokens if counter[x]>2]
     print(counter.most_common(20))
-    return tokens
+    return tokens, [x[0] for x in counter.most_common(100)]
 
 class Paper:
     def __init__(self, title, authors, pdf_url, pdf_path):
         self.title = title
         self.authors = authors
         self.pdf_url = pdf_url
+        self.topics = []
 
         download_paper_if_not_exists(pdf_url, pdf_path)
 
         self.text = get_text_from_pdf(pdf_path)
-        self.tokens = tokenize(self.text)
+        self.tokens, self.most_common = tokenize(self.text)
+        self.most_common_string = " ".join(self.most_common)
         self.thumbnail_path = create_thumbnail(title, pdf_path)
+
 
     def to_dict(self):
         return { "title": self.title,
                  "authors": self.authors,
                  "thumbnail_path": self.thumbnail_path,
-                 "pdf_url": self.pdf_url}
+                 "pdf_url": self.pdf_url,
+                 "most_common_string": self.most_common_string,
+                 "topics": self.topics}
+
+    def set_topics(self, topics):
+        self.topics = topics

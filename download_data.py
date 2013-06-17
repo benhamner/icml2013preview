@@ -49,10 +49,10 @@ def download_pdfs(site_url):
 
 def download_all_days():
     papers1 = download_pdfs("http://icml.cc/2013/?page_id=868") # Monday    June 17
-    papers2 = download_pdfs("http://icml.cc/2013/?page_id=874") # Tuesday   June 18
-    papers3 = download_pdfs("http://icml.cc/2013/?page_id=876") # Wednesday June 19
+    # papers2 = download_pdfs("http://icml.cc/2013/?page_id=874") # Tuesday   June 18
+    # papers3 = download_pdfs("http://icml.cc/2013/?page_id=876") # Wednesday June 19
 
-    return papers1+papers2+papers3
+    return papers1 #+papers2+papers3
 
 def main():
     papers = download_all_days()
@@ -63,12 +63,22 @@ def main():
     tfidf = models.TfidfModel(corpus)
     corpus_tfidf = tfidf[corpus]
     print("training lda")
-    lda = models.ldamodel.LdaModel(corpus=corpus, id2word=dictionary, num_topics=6, update_every=0, passes=100)
+    lda = models.ldamodel.LdaModel(corpus=corpus_tfidf, id2word=dictionary, num_topics=6, update_every=0, passes=100)
     print(lda.show_topics(-1, 15))
     print("lda trained")
-    
-    f = open("papers.json", "w")
-    f.write(json.dumps([paper.to_dict() for paper in papers]))
+
+    for paper, doc_bow in zip(papers, corpus_tfidf):
+        paper.set_topics([x[1] for x in lda[doc_bow]])
+ 
+    f = open("data.json", "w")
+
+    data = {
+        "papers": [paper.to_dict() for paper in papers],
+        "topics": [" ".join([y[1] for y in lda.show_topic(x, 100)[:20]]) for x in range(6)]
+    }
+    print(data["topics"])
+
+    f.write(json.dumps(data))
     f.close()
 
     import pdb;pdb.set_trace()
