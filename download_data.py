@@ -1,4 +1,5 @@
 from bs4 import BeautifulSoup
+from gensim import corpora, models, similarities
 import json
 import os
 from paper import Paper
@@ -25,6 +26,8 @@ def get_title_and_authors(soup):
     else:
         title = re.findall(r"\d+\s*,(.+),", soup.contents[0])[0].strip()
         authors = re.findall(r"\d+\s*,.+,(.+)", soup.contents[0])[0].strip()
+    title = title.replace(",", "").encode("ascii", "ignore")
+    authors = authors.encode("ascii", "ignore")
     return title, authors
 
 def download_pdfs(site_url):
@@ -46,16 +49,29 @@ def download_pdfs(site_url):
 
 def download_all_days():
     papers1 = download_pdfs("http://icml.cc/2013/?page_id=868") # Monday    June 17
-    #papers2 = download_pdfs("http://icml.cc/2013/?page_id=874") # Tuesday   June 18
-    #papers3 = download_pdfs("http://icml.cc/2013/?page_id=876") # Wednesday June 19
+    papers2 = download_pdfs("http://icml.cc/2013/?page_id=874") # Tuesday   June 18
+    papers3 = download_pdfs("http://icml.cc/2013/?page_id=876") # Wednesday June 19
 
-    return papers1 #+papers2+papers3
+    return papers1+papers2+papers3
 
 def main():
     papers = download_all_days()
+    texts = [paper.tokens for paper in papers]
+    dictionary = corpora.Dictionary(texts)
+    print(dictionary)
+    corpus = [dictionary.doc2bow(text) for text in texts]
+    tfidf = models.TfidfModel(corpus)
+    corpus_tfidf = tfidf[corpus]
+    print("training lda")
+    lda = models.ldamodel.LdaModel(corpus=corpus, id2word=dictionary, num_topics=6, update_every=0, passes=100)
+    print(lda.show_topics(-1, 15))
+    print("lda trained")
+    
     f = open("papers.json", "w")
     f.write(json.dumps([paper.to_dict() for paper in papers]))
     f.close()
+
+    import pdb;pdb.set_trace()
 
 if __name__=="__main__":
     main()

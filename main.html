@@ -1,8 +1,14 @@
-<div class="wrapper">
+<div id="header">
+  <h1>ICML 2013 Papers Preview</h1>
+  created by <a href="https://twitter.com/benhamner">@benhamner</a><br />
+  inspired by <a href="https://twitter.com/karpathy">@karpathy</a> (with his <a href="">NIPS 2012 Preview</a>)
+</div>
+<div id="wrapper">
   <div id="paperList">
     <div ng-repeat="paper in papers">
-      <p>{{paper.title}}</p>
-      <img src="thumbnails/{{paper.title}}.jpg"></img>
+      <h3>{{paper.title}}</h3>
+      <p>{{paper.authors}}</p>
+      <a href="{{paper.pdf_url}}"><img src="{{paper.thumbnail_path}}" width="100%"></img></a>
     </div>
   </div>
 </div>
