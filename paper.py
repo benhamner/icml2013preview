@@ -53,7 +53,6 @@ class Paper:
 
         self.text = get_text_from_pdf(pdf_path)
         self.tokens, self.most_common = tokenize(self.text)
-        self.most_common_string = " ".join(self.most_common)
         self.thumbnail_path = create_thumbnail(title, pdf_path)
 
 
@@ -62,7 +61,7 @@ class Paper:
                  "authors": self.authors,
                  "thumbnail_path": self.thumbnail_path,
                  "pdf_url": self.pdf_url,
-                 "most_common_string": self.most_common_string,
+                 "most_common": self.most_common,
                  "topics": self.topics}
 
     def set_topics(self, topics):

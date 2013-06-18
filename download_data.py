@@ -63,7 +63,7 @@ def main():
     tfidf = models.TfidfModel(corpus)
     corpus_tfidf = tfidf[corpus]
     print("training lda")
-    lda = models.ldamodel.LdaModel(corpus=corpus_tfidf, id2word=dictionary, num_topics=6, update_every=0, passes=100)
+    lda = models.ldamodel.LdaModel(corpus=corpus_tfidf, id2word=dictionary, num_topics=6, update_every=100, passes=200)
     print(lda.show_topics(-1, 15))
     print("lda trained")
 
@@ -74,7 +74,7 @@ def main():
 
     data = {
         "papers": [paper.to_dict() for paper in papers],
-        "topics": [" ".join([y[1] for y in lda.show_topic(x, 100)[:20]]) for x in range(6)]
+        "topics": [[y[1] for y in lda.show_topic(x, 20)] for x in range(6)]
     }
     print(data["topics"])
 

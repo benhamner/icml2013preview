@@ -4,23 +4,31 @@
   inspired by <a href="https://twitter.com/karpathy">@karpathy</a> (with his <a href="">NIPS 2012 Preview</a>)
 </div>
 <div id="wrapper">
-  <div id="topicSorter">
-    Sort by LDA Topics:
-    <span ng-repeat="topic in topics">
-        <a ng-click="sort_topic($index)">Topic {{$index+1}}</a>
-    </span>
+  <div id="info">
+    <em>Click a topic to toggle whether it's used to sort the papers. Click a word to order the papers by the frequency they contain the word.</em>
   </div>
   <div id="topicsList">
-    <div ng-repeat="topic in topics">
-        <p><b>Topic {{$index+1}}:</b> {{topic}}</p>
-    </div>
+    <table>
+        <tr ng-repeat="topic in topics">
+            <td class="topicLabel"><span ng-click="switch_topic($index)" class="topicSelector" ng-class="{'selected':topicSelection[$index]}">Topic {{$index+1}}</span></td>
+            <td class="topicWords">
+              <span ng-repeat="word in topic">
+                <span class="wordSelector" ng-click="sortByWord(word)" ng-class="{'wordSelected':sortedWord==word}">{{word}}</span>
+              </span>
+            </td>
+        </tr>
+    </table>
   </div>
   <div id="paperList">
     <div ng-repeat="paper in papers">
       <h3>{{paper.title}}</h3>
-      <p>{{paper.authors}}</p>
+      {{paper.authors}}<br />
       <a href="{{paper.pdf_url}}"><img src="{{paper.thumbnail_path}}" width="100%"></img></a>
-      <p>{{paper.most_common_string}}</p>
+      <p>
+        <span ng-repeat="word in paper.most_common">
+          <span class="wordSelector" ng-click="sortByWord(word)" ng-class="{'wordSelected':sortedWord==word}">{{word}}</span>
+        </span>
+      </p>
     </div>
   </div>
 </div>
