@@ -12,32 +12,46 @@ icml2013PreviewApp.controller('mainCtrl', function($scope, JsonService){
   JsonService.get(function(data){
     $scope.papers = data.papers;
     $scope.topics = data.topics;
-    $scope.topicSelection = _.map($scope.topics, function(topic) {return false;});
-    $scope.topicSelection[0] = true;
-    $scope.sortedByWord = false
-    $scope.sortedWord = "";
+    topicSelection = _.map($scope.topics, function(topic) {return false;});
+    topicSelection[topicSelection.length-1] = true;
+    $scope.resort_papers_by_topic(topicSelection);
     window.s = $scope;
   });
 
   $scope.switch_topic = function (topic) {
     $scope.topicSelection[topic] = !$scope.topicSelection[topic];
-    $scope.resort_papers_by_topic();
+    $scope.resort_papers_by_topic($scope.topicSelection);
   }
 
   $scope.sortByWord = function (word) {
-    $scope.topicSelection = _.map($scope.topics, function(topic) {return false;});
+    $scope.resetSelection();
     $scope.papers.sort(function (p1, p2) {
       i1 = p1.most_common.indexOf(word)
       i2 = p2.most_common.indexOf(word)
-      if (i1<0) {i1 = p1.most_common.length;}
-      if (i2<0) {i2 = p2.most_common.length;}
+      if (i1<0) {i1 = 100000;}
+      if (i2<0) {i2 = 100000;}
       return i1-i2;
     });
     $scope.sortedWord = word;
+    scroll(0,0);
   }
 
-  $scope.resort_papers_by_topic = function () {
-    $scope.sortedWord = "";
+  $scope.sortByAuthor = function (author) {
+    $scope.resetSelection();
+    $scope.papers.sort(function (p1, p2) {
+      i1 = p1.authors.indexOf(author)
+      i2 = p2.authors.indexOf(author)
+      if (i1<0) {i1 = 10000;}
+      if (i2<0) {i2 = 10000;}
+      return i1-i2;
+    });
+    $scope.sortedAuthor = author;
+    scroll(0,0);
+  }
+
+  $scope.resort_papers_by_topic = function (topicSelection) {
+    $scope.resetSelection();
+    $scope.topicSelection = topicSelection
     $scope.papers.sort(function (p1, p2) {
       return _.reduce(_.map(_.range($scope.topics.length), function (topic) {
         if ($scope.topicSelection[topic]) {
@@ -45,6 +59,13 @@ icml2013PreviewApp.controller('mainCtrl', function($scope, JsonService){
         }
         return 0;
       }), function (a1, a2) {return a1+a2;}, 0);});
+    scroll(0,0);
+  }
+
+  $scope.resetSelection = function() {
+    $scope.sortedAuthor = "";
+    $scope.sortedWord = "";
+    $scope.topicSelection = _.map($scope.topics, function(topic) {return false;});
   }
 
 });

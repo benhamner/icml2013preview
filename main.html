@@ -1,11 +1,20 @@
 <div id="header">
-  <h1>ICML 2013 Papers Preview</h1>
+  <h1>ICML 2013 Papers</h1>
+  papers from <a href="http://icml.cc/2013/">icml.cc</a>
   created by <a href="https://twitter.com/benhamner">@benhamner</a><br />
-  inspired by <a href="https://twitter.com/karpathy">@karpathy</a> (with his <a href="">NIPS 2012 Preview</a>)
+  inspired by <a href="https://twitter.com/karpathy">@karpathy</a> (with his <a href="">NIPS 2012 Preview</a>)<br />
+  source code available on <a href="https://www.github.com/benhamner/icml2013preview">github</a>
 </div>
 <div id="wrapper">
   <div id="info">
-    <em>Click a topic to toggle whether it's used to sort the papers. Click a word to order the papers by the frequency they contain the word.</em>
+    <em>To navigate:
+        <ul>
+            <li>Click an LDA topic to toggle whether it's used to sort the papers.</li>
+            <li>Click a word to order the papers by the frequency they contain the word.</li>
+            <li>Click an author to sort the papers by that author.</li>
+            <li>Be patient! This takes a couple moments to load and is memory-intensive for a couple hundred papers.</li>
+        </ul>
+    </em>
   </div>
   <div id="topicsList">
     <table>
@@ -20,15 +29,20 @@
     </table>
   </div>
   <div id="paperList">
-    <div ng-repeat="paper in papers">
-      <h3>{{paper.title}}</h3>
-      {{paper.authors}}<br />
-      <a href="{{paper.pdf_url}}"><img src="{{paper.thumbnail_path}}" width="100%"></img></a>
-      <p>
-        <span ng-repeat="word in paper.most_common">
-          <span class="wordSelector" ng-click="sortByWord(word)" ng-class="{'wordSelected':sortedWord==word}">{{word}}</span>
+    <div ng-repeat="paper in papers" ng-class="{'evenPaper': $index % 2 == 0}">
+      <div class="paper">
+        <h3>{{paper.title}}</h3>
+        <span ng-repeat="author in paper.authors">
+          <span class="authorSelector" ng-click="sortByAuthor(author)" ng-class="{'authorSelected':sortedAuthor==author}">{{author}}</span>
         </span>
-      </p>
+        <br />
+        <a href="{{paper.pdf_url}}"><img src="{{paper.thumbnail_path}}" width="100%"></img></a>
+        <p>
+          <span ng-repeat="word in paper.most_common">
+            <span class="wordSelector" ng-click="sortByWord(word)" ng-class="{'wordSelected':sortedWord==word}">{{word}}</span>
+          </span>
+        </p>
+      </div>
     </div>
   </div>
 </div>

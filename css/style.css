@@ -42,20 +42,40 @@ h3 {
 }
 
 #wrapper {
-    width: 970px;
-    padding: 15px;
     margin-left: auto;
     margin-right: auto;
-
-    aborder-left: solid 1px #D6D3C5;
-    aborder-right: solid 1px #D6D3C5;
 
     background-color: white;
 
     text-align: center;
 }
 
+.paper{
+    width: 970px;
+    padding: 15px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 #topicsList {
+    text-align: left;
+    width: 970px;
+    padding: 15px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.evenPaper {
+    background-color: #CCCCCC;
+}
+
+#info {
+    margin-left: auto;
+    margin-right: auto;
+    width: 970px;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 15px;
     text-align: left;
 }
 
@@ -71,8 +91,19 @@ h3 {
     color: #333333;
 }
 
-.wordSelector:hover {
+.authorSelector {
+    cursor: pointer;
+}
+
+.authorSelector:hover {
     color: #C0E3F5;
+}
+
+.authorSelected {
+    padding: 4px;
+    color: #e65a30;
+    border: 2px solid black;
+    background-color: #ffffaa;
 }
 
 .wordSelected {
