@@ -11,8 +11,8 @@ Technologies used:
    - [requiests](http://docs.python-requests.org/en/latest/)
  - Javascript
    - [AngularJS](http://angularjs.org/)
-     -[Angular UI Bootstrap](http://angular-ui.github.io/bootstrap/)
-     -[ngInfiniteScroll](http://binarymuse.github.io/ngInfiniteScroll/)
+   -[Angular UI Bootstrap](http://angular-ui.github.io/bootstrap/)
+   -[ngInfiniteScroll](http://binarymuse.github.io/ngInfiniteScroll/)
    - [Underscore.js](http://underscorejs.org/)
  - [ImageMagick Montage](http://www.imagemagick.org/script/montage.php)
  - [pdftotext](http://linux.die.net/man/1/pdftotext)
