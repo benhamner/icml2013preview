@@ -19,7 +19,7 @@ def download_paper_if_not_exists(pdf_url, pdf_path):
 def create_thumbnail(title, pdf_path):
     thumb_name = "thumbnails/" + title.encode("ascii", "ignore") + ".jpg"
     if not os.path.exists(thumb_name):
-        args = ["montage.exe", "%s[0-7]" % pdf_path, "-mode", "Concatenate", "-tile", "x1", "-quality", "80", "-resize", "x230","-trim", thumb_name]
+        args = ["montage.exe", "../%s[0-7]" % pdf_path, "-mode", "Concatenate", "-tile", "x1", "-quality", "80", "-resize", "x230","-trim", thumb_name]
         print(" ".join(args))
         subprocess.call(args)
     return thumb_name

@@ -42,5 +42,5 @@ if __name__=="__main__":
     data_path  = os.path.join(os.environ["DataPath"], "icml2013preview")
     paper_path = os.path.join(data_path, "papers")
     temp_path  = os.path.join(data_path, "temp.txt")
-    json_path  = "data.json"
+    json_path  = "../data/data.json"
     main(paper_path, json_path)

@@ -1,11 +1,11 @@
 var icml2013PreviewApp = angular.module('icml2013PreviewApp', ['ngResource', 'infinite-scroll', 'ui.bootstrap'])
     .config(function($routeProvider) {
         $routeProvider.
-            when('/', { controller: 'mainCtrl', templateUrl: 'main.html'}).
+            when('/', { controller: 'mainCtrl', templateUrl: 'views/main.html'}).
             otherwise({ redirectTo: '/' });
     })
     .factory('JsonService', function($resource) {
-      return $resource('data.json');
+      return $resource('data/data.json');
     });
 
 icml2013PreviewApp.controller('mainCtrl', function($scope, JsonService){
