@@ -1,5 +1,6 @@
 from bs4 import BeautifulSoup
 from collections import Counter
+import cPickle as pickle
 from gensim import corpora, models, similarities
 import itertools
 import json
@@ -8,9 +9,6 @@ from paper import Paper
 import re
 import requests
 import urllib
-
-data_path  = os.path.join(os.environ["DataPath"], "icml2013preview")
-paper_path = os.path.join(data_path, "papers")
 
 def extract_pdf_urls(html_content):
     soup = BeautifulSoup(html_content)
@@ -35,7 +33,7 @@ def get_title_and_authors(soup):
     authors = [author.strip() for author in authors.split(";")]
     return title, authors
 
-def download_pdfs(site_url):
+def download_pdfs(site_url, paper_path):
     print("Downloading PDF's From %s" % site_url)
     r = requests.get(site_url)
     html = r.content
@@ -52,50 +50,9 @@ def download_pdfs(site_url):
         papers.append(paper)
     return papers
 
-def download_all_days():
-    papers1 = download_pdfs("http://icml.cc/2013/?page_id=868") # Monday    June 17
-    papers2 = download_pdfs("http://icml.cc/2013/?page_id=874") # Tuesday   June 18
-    papers3 = download_pdfs("http://icml.cc/2013/?page_id=876") # Wednesday June 19
+def download_all_days(paper_path):
+    papers_day1 = download_pdfs("http://icml.cc/2013/?page_id=868", paper_path) # Monday    June 17
+    papers_day2 = download_pdfs("http://icml.cc/2013/?page_id=874", paper_path) # Tuesday   June 18
+    papers_day3 = download_pdfs("http://icml.cc/2013/?page_id=876", paper_path) # Wednesday June 19
 
-    return papers1+papers2+papers3
-
-def require_word_to_be_in_n_documents(n, texts):
-    unique_words = [list(set(text)) for text in texts]
-    counts = Counter(itertools.chain(*unique_words))
-    return [[word for word in text if counts[word]>=n] for text in texts]
-
-def main():
-    papers = download_all_days()
-    texts = [paper.tokens for paper in papers]
-    texts = require_word_to_be_in_n_documents(2, texts)
-
-    dictionary = corpora.Dictionary(texts)
-    print(dictionary)
-    corpus = [dictionary.doc2bow(text) for text in texts]
-    tfidf = models.TfidfModel(corpus)
-    corpus_tfidf = tfidf[corpus]
-    print("training lda")
-    num_topics=6
-    lda = models.ldamodel.LdaModel(corpus=corpus_tfidf, id2word=dictionary, num_topics=num_topics, update_every=1, passes=100)
-    print(lda.show_topics(-1, 15))
-    print("lda trained")
-
-    for paper, doc_bow in zip(papers, corpus_tfidf):
-        paper_topics = [0 for x in range(num_topics)]
-        for topic_id, p in lda[doc_bow]:
-            paper_topics[topic_id] = p
-        paper.set_topics(paper_topics)
- 
-    f = open("data.json", "w")
-
-    data = {
-        "papers": [paper.to_dict() for paper in papers],
-        "topics": [[y[1] for y in lda.show_topic(x, 20)] for x in range(num_topics)]
-    }
-    print(data["topics"])
-
-    f.write(json.dumps(data))
-    f.close()
-
-if __name__=="__main__":
-    main()
+    return papers_day1+papers_day2+papers_day3

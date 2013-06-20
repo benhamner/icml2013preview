@@ -6,6 +6,7 @@ import re
 import subprocess
 
 data_path  = os.path.join(os.environ["DataPath"], "icml2013preview")
+paper_path = os.path.join(data_path, "papers")
 temp_path  = os.path.join(data_path, "temp.txt")
 
 english_stop_words = set(stopwords.words("english"))

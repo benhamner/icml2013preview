@@ -1,4 +1,4 @@
-var icml2013PreviewApp = angular.module('icml2013PreviewApp', ['ngResource'])
+var icml2013PreviewApp = angular.module('icml2013PreviewApp', ['ngResource', 'infinite-scroll', 'ui.bootstrap'])
     .config(function($routeProvider) {
         $routeProvider.
             when('/', { controller: 'mainCtrl', templateUrl: 'main.html'}).
@@ -9,11 +9,13 @@ var icml2013PreviewApp = angular.module('icml2013PreviewApp', ['ngResource'])
     });
 
 icml2013PreviewApp.controller('mainCtrl', function($scope, JsonService){
+  $scope.papers = [];
+
   JsonService.get(function(data){
     $scope.papers = data.papers;
     $scope.topics = data.topics;
     topicSelection = _.map($scope.topics, function(topic) {return false;});
-    topicSelection[topicSelection.length-1] = true;
+    topicSelection[0] = true;
     $scope.resort_papers_by_topic(topicSelection);
     window.s = $scope;
   });
@@ -33,7 +35,7 @@ icml2013PreviewApp.controller('mainCtrl', function($scope, JsonService){
       return i1-i2;
     });
     $scope.sortedWord = word;
-    scroll(0,0);
+    $scope.refreshPapersTruncated();
   }
 
   $scope.sortByAuthor = function (author) {
@@ -46,7 +48,7 @@ icml2013PreviewApp.controller('mainCtrl', function($scope, JsonService){
       return i1-i2;
     });
     $scope.sortedAuthor = author;
-    scroll(0,0);
+    $scope.refreshPapersTruncated();
   }
 
   $scope.resort_papers_by_topic = function (topicSelection) {
@@ -59,7 +61,7 @@ icml2013PreviewApp.controller('mainCtrl', function($scope, JsonService){
         }
         return 0;
       }), function (a1, a2) {return a1+a2;}, 0);});
-    scroll(0,0);
+    $scope.refreshPapersTruncated();
   }
 
   $scope.resetSelection = function() {
@@ -67,5 +69,31 @@ icml2013PreviewApp.controller('mainCtrl', function($scope, JsonService){
     $scope.sortedWord = "";
     $scope.topicSelection = _.map($scope.topics, function(topic) {return false;});
   }
+
+  $scope.refreshPapersTruncated = function() {
+    $scope.papersTruncated = $scope.papers.slice(0, 10);
+    scroll(0,0);
+  }
+
+  $scope.papersTruncated = [];
+
+  $scope.addMorePapers = function() {
+    var n = $scope.papersTruncated.length;
+    $scope.papers.slice(n, n+10).forEach(function(p) {$scope.papersTruncated.push(p);});
+  }
+
+  $scope.tipsOpen = function () {
+    $scope.shouldBeOpen = true;
+  };
+
+  $scope.tipsClose = function () {
+    $scope.closeMsg = 'I was closed at: ' + new Date();
+    $scope.shouldBeOpen = false;
+  };
+
+  $scope.tipsOpts = {
+    backdropFade: true,
+    dialogFade:true
+  };
 
 });

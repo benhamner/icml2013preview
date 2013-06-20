@@ -1,35 +1,40 @@
-<div id="header">
-  <h1>ICML 2013 Papers</h1>
-  papers from <a href="http://icml.cc/2013/">icml.cc</a><br />
-  created by <a href="https://twitter.com/benhamner">@benhamner</a><br />
-  inspired by <a href="https://twitter.com/karpathy">@karpathy</a> (with his <a href="">NIPS 2012 Preview</a>)<br />
-  source code available on <a href="https://www.github.com/benhamner/icml2013preview">github</a>
-</div>
 <div id="wrapper">
+  <div id="header">
+    <h1>ICML 2013 Papers</h1>
+    papers from <a href="http://icml.cc/2013/">icml.cc</a><br />
+    created by <a href="https://twitter.com/benhamner">@benhamner</a><br />
+    inspired by <a href="https://twitter.com/karpathy">@karpathy</a> (with his <a href="http://cs.stanford.edu/people/karpathy/nipspreview/">NIPS 2012 Preview</a>)<br />
+    source code available on <a href="https://www.github.com/benhamner/icml2013preview">github</a>
+  </div>
   <div id="info">
-    <em>To navigate:
-        <ul>
+    <button class="btn" ng-click="tipsOpen()">Navigation Tips</button>
+    <div modal="shouldBeOpen" close="tipsClose()" options="tipsOpts">
+        <div class="modal-header">
+            <h4>Navigation Tips</h4>
+        </div>
+        <div class="modal-body">
+          <ul>
             <li>Click an LDA topic to toggle whether it's used to sort the papers.</li>
             <li>Click a word to order the papers by the frequency they contain the word.</li>
             <li>Click an author to sort the papers by that author.</li>
-            <li>Be patient! This takes a couple moments to load and is memory-intensive for a couple hundred papers.</li>
-        </ul>
-    </em>
+          </ul>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-info" ng-click="tipsClose()">OK</button>
+        </div>
+    </div>
   </div>
-  <div id="topicsList">
-    <table>
-        <tr ng-repeat="topic in topics">
-            <td class="topicLabel"><span ng-click="switch_topic($index)" class="topicSelector" ng-class="{'selected':topicSelection[$index]}">Topic {{$index+1}}</span></td>
-            <td class="topicWords">
-              <span ng-repeat="word in topic">
-                <span class="wordSelector" ng-click="sortByWord(word)" ng-class="{'wordSelected':sortedWord==word}">{{word}}</span>
-              </span>
-            </td>
-        </tr>
-    </table>
+  <div id="topicsList">LDA Topics: 
+    <span ng-repeat="topic in topics">
+      <span ng-click="switch_topic($index)" class="topicSelector" ng-class="{'topicSelected':topicSelection[$index]}">
+        <span tooltip-placement="bottom" tooltip-html-unsafe="<span class='topicTip'>{{topic.join('<br />')}}</span>">
+          Topic {{$index+1}}
+        </span>
+      </span>
+    </span>
   </div>
-  <div id="paperList">
-    <div ng-repeat="paper in papers" ng-class="{'evenPaper': $index % 2 == 0}">
+  <div id="paperList" infinite-scroll="addMorePapers()">
+    <div ng-repeat="paper in papersTruncated" ng-class="{'evenPaper': $index % 2 == 0}">
       <div class="paper">
         <h3>{{paper.title}}</h3>
         <span ng-repeat="author in paper.authors">
